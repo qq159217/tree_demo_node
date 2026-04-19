@@ -3,4 +3,7 @@ node_modules/
 dist/
 **/dist/
 server/data/db.json
+server/data/area-tree.sqlite
+server/data/area-tree.sqlite-shm
+server/data/area-tree.sqlite-wal
 *.log
