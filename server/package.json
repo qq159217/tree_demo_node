@@ -1,0 +1,16 @@
+{
+  "name": "tree-node-server",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "mock:tree": "bun tools/generate-tree-json.ts"
+  },
+  "dependencies": {
+    "hono": "^4.7.4",
+    "lowdb": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
