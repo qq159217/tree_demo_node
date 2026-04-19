@@ -235,7 +235,8 @@ app.post("/api/import", async (c) => {
 /** 文档示例数据：机电产业园 → 监控室 → 内监控室 → 火灾监控 */
 app.post("/api/seed", async (c) => {
   return exclusive(async () => {
-    if (db.data.area_nodes.length > 0) {
+    const row = db.sqlite.prepare("SELECT COUNT(*) AS cnt FROM area_node").get() as { cnt: number };
+    if (row.cnt > 0) {
       return c.json({ error: "already seeded" }, 409);
     }
     const svc = new TreeService(db);
