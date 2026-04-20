@@ -15,6 +15,9 @@ type Config = {
   childrenPerLevel: number;
   maxNodes: number;
   output: string;
+  /** 第一个根节点的显示名称（depth=1, sort_order=0） */
+  rootName: string | undefined;
+  compactJson: boolean;
 };
 
 function toInt(value: string | undefined, fallback: number): number {
@@ -43,6 +46,8 @@ function parseArgs(argv: string[]): Config {
     childrenPerLevel: toInt(map.get("children"), 4),
     maxNodes: toInt(map.get("max"), 3000),
     output: map.get("output") ?? "mock-tree-data.json",
+    rootName: map.get("root-name") ?? map.get("rootName"),
+    compactJson: map.get("compact") === "true",
   };
 }
 
@@ -78,8 +83,12 @@ function buildTree(config: Config): { roots: TreeNodeInput[]; total: number } {
     total += 1;
 
     const type = typeForDepth(depth, config.depth);
+    const rootLabel =
+      depth === 1 && config.rootName && siblingOrder === 0
+        ? config.rootName
+        : nameFor(type, serial, depth);
     const node: TreeNodeInput = {
-      name: nameFor(type, serial, depth),
+      name: rootLabel,
       node_type: type,
       sort_order: siblingOrder,
     };
@@ -113,7 +122,10 @@ function main() {
     ? config.output
     : path.join(process.cwd(), config.output);
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
-  fs.writeFileSync(outPath, `${JSON.stringify(roots, null, 2)}\n`, "utf-8");
+  const body = config.compactJson
+    ? `${JSON.stringify(roots)}\n`
+    : `${JSON.stringify(roots, null, 2)}\n`;
+  fs.writeFileSync(outPath, body, "utf-8");
 
   console.log("mock tree json generated");
   console.log(`output: ${outPath}`);

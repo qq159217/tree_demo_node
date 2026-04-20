@@ -4,3 +4,6 @@ dist/
 **/dist/
 server/data/db.json
 *.log
+
+# Generated tree fixtures (run `bun run mock:tree` in server/)
+server/mock-tree*.json
